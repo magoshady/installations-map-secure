@@ -16,20 +16,25 @@
 
   <script>
     async function loadGoogleMaps() {
+      // Check if Google Maps is already loaded
+      if (window.google && window.google.maps) {
+        return Promise.resolve();
+      }
+      
       // Fetch Google Maps API key from secure endpoint
       const configResponse = await fetch('/api/maps-config');
       const config = await configResponse.json();
       
       return new Promise((resolve, reject) => {
+        // Set up the callback function before loading the script
+        window.initMapCallback = resolve;
+        
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${config.apiKey}&callback=initMap`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${config.apiKey}&callback=initMapCallback&loading=async`;
         script.async = true;
         script.defer = true;
         script.onerror = reject;
         document.head.appendChild(script);
-        
-        // The callback will be called when Google Maps is loaded
-        window.initMap = resolve;
       });
     }
 
@@ -83,7 +88,8 @@
       try {
         // Load Google Maps API dynamically
         await loadGoogleMaps();
-        // Maps API is now loaded and initMap will be called by the callback
+        // Maps API is now loaded, call initMap
+        await initMap();
       } catch (error) {
         console.error('Error loading Google Maps:', error);
       }
