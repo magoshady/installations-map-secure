@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+  <!-- Google Maps will be loaded dynamically -->
+</head>
+<body>
+  <h1></h1>
+  <div id="map"></div>
+
+  <script>
+    async function loadGoogleMaps() {
+      // Fetch Google Maps API key from secure endpoint
+      const configResponse = await fetch('/api/maps-config');
+      const config = await configResponse.json();
+      
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${config.apiKey}&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        script.onerror = reject;
+        document.head.appendChild(script);
+        
+        // The callback will be called when Google Maps is loaded
+        window.initMap = resolve;
+      });
+    }
+
+    async function initMap() {
+      try {
+        // 1️⃣ Fetch data from secure API endpoint
+        const response = await fetch('/api/airtable-data');
+        const data = await response.json();
+        const records = data.records;
+
+        // 2️⃣ Initialize the map (centered in Sydney, adjust as needed)
+        const map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 9,
+          center: { lat: -33.86, lng: 151.2 }
+        });
+
+        // 3️⃣ Add markers showing Site Address, Suburb, and Postcode
+        records.forEach(record => {
+          const lat = parseFloat(record.fields['Site Latitude']);
+          const lng = parseFloat(record.fields['Site Longitude']);
+          const address = record.fields['Site Address'] || 'Address not available';
+          const suburb = record.fields['Site Suburb'] || '';
+          const postcode = record.fields['Site Post Code'] || '';
+
+          if (!isNaN(lat) && !isNaN(lng)) {
+            const marker = new google.maps.Marker({
+              position: { lat: lat, lng: lng },
+              map: map,
+              title: `${address}, ${suburb} ${postcode}`
+            });
+
+            const infoWindow = new google.maps.InfoWindow({
+              content: `
+                <strong>${address}</strong><br>
+                ${suburb} ${postcode}
+              `
+            });
+
+            marker.addListener('click', () => {
+              infoWindow.open(map, marker);
+            });
+          }
+        });
+
+      } catch (error) {
+        console.error('Error fetching or displaying map data:', error);
+      }
+    }
+
+    async function startApp() {
+      try {
+        // Load Google Maps API dynamically
+        await loadGoogleMaps();
+        // Maps API is now loaded and initMap will be called by the callback
+      } catch (error) {
+        console.error('Error loading Google Maps:', error);
+      }
+    }
+
+    // Start the application
+    startApp();
+  </script>
+</body>
+</html>

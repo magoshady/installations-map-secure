@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installations Map - Embedded</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .map-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .info h3 {
+            margin-top: 0;
+            color: #1976D2;
+        }
+        
+        .responsive-note {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ Installations Map</h1>
+        
+        <div class="map-container">
+            <iframe 
+                class="map-iframe"
+                src="https://YOUR-VERCEL-URL.vercel.app/"
+                title="Installations Map"
+                loading="lazy"
+                allowfullscreen>
+            </iframe>
+        </div>
+        
+        <div class="info">
+            <h3>📍 About This Map</h3>
+            <p>This interactive map shows all installation locations. Click on any marker to see detailed information including the site address, suburb, and postal code.</p>
+            <p><strong>Features:</strong></p>
+            <ul>
+                <li>Real-time data from Airtable</li>
+                <li>Secure API key handling</li>
+                <li>Interactive markers with detailed information</li>
+                <li>Responsive design for all devices</li>
+            </ul>
+        </div>
+        
+        <div class="responsive-note">
+            💡 <strong>Note:</strong> This iframe is fully responsive and will work on desktop, tablet, and mobile devices.
+        </div>
+    </div>
+</body>
+</html> 
