@@ -35,7 +35,8 @@ export default async function handler(req, res) {
         'Site Longitude': record.fields['Site Longitude'],
         'Site Address': record.fields['Site Address'],
         'Site Suburb': record.fields['Site Suburb'],
-        'Site Post Code': record.fields['Site Post Code']
+        'Site Post Code': record.fields['Site Post Code'],
+        'Finance Status': record.fields['Finance Status']
       }
     }));
 

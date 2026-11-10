@@ -59,10 +59,18 @@
           const suburb = record.fields['Site Suburb'] || '';
           const postcode = record.fields['Site Post Code'] || '';
 
+          // Finance Status (Airtable column T): APPROVED keeps the default red pin,
+          // APPLIED gets a distinct blue pin. Anything else behaves as before.
+          const rawStatus = record.fields['Finance Status'];
+          const financeStatus = String(Array.isArray(rawStatus) ? rawStatus[0] : (rawStatus || '')).trim().toUpperCase();
+
           if (!isNaN(lat) && !isNaN(lng)) {
             const marker = new google.maps.Marker({
               position: { lat: lat, lng: lng },
               map: map,
+              ...(financeStatus === 'APPLIED' && {
+                icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+              }),
               title: `${address}, ${suburb} ${postcode}`
             });
 
